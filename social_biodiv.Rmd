@@ -9,22 +9,164 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+#####install and load reticulate 
+```{r}
+# pkgTest is a helper function to load packages and install packages only when they are not installed yet.
+pkgTest <- function(x)
+{
+  if (x %in% rownames(installed.packages()) == FALSE) {
+    install.packages(x, dependencies= TRUE)    
+  }
+  library(x, character.only = TRUE)
+}
+#reticulate is needed to use python in R 
+neededPackages <- c("reticulate", "leaflet", "mapview" )#this is just a placeholder, installing dev version of reticulate
+for (package in neededPackages){pkgTest(package)}
+devtools::install_github("yihui/knitr")
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
 ```
 
-## Including Plots
+#####install using py_install
+```{r}
+py_install("nose")
+py_install("tornado")
+py_install("matplotlib")
+py_install("flickrapi")
 
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+#####import python packages
+```{r}
+flickrapi <- import("flickrapi")
+```
+
+#####import flickrapi, load keys in python, do search for birds in Santa Monica Hills
+```{python}
+#####################################################################################
+#import packages
+import flickrapi
+import pandas as pd
+import csv
+#####################################################################################
+#key and secret
+api_key_file = "/Users/fischhoff/ilya documents/R/social_biodiv/flickr_api_key.txt"
+with open(api_key_file, "r") as keyfile:
+    api_key = keyfile.read()
+api_key
+
+#get secret
+
+api_secret_file = "/Users/fischhoff/ilya documents/R/social_biodiv/flickr_api_secret.txt"
+with open(api_secret_file, "r") as keyfile:
+    secret_api_key = keyfile.read()
+#####################################################################################
+#do search
+#https://www.flickr.com/groups/51035612836@N01/discuss/72157668638670202/
+flickr = flickrapi.FlickrAPI(api_key, secret_api_key, format='parsed-json')
+extras='url_m,geo,tags,owner_name,date_taken,date_upload,description'
+#bbox
+
+LLX = -119.065606
+LLY = 34.09166
+URX=-118.540862
+URY = 34.142754
+bb = str(LLX) + ',' + str(LLY) + ',' + str(URX) + ',' + str(URY)
+query = 'birds'
+#search
+page_no = 1
+parameters = { 'bbox': bb, 
+'tags': query, 
+#'tag_mode':'all', #note: if using tag_mode: all then comment out tags: query
+'per_page':250, 
+'page': page_no, 
+'has_geo':1, 
+'accuracy':14,
+'extras': extras}
+init = flickr.photos.search(**parameters)
+pages = init['photos']['pages']
+print(pages)
+total = init['photos']['total']
+print(total)
+
+#####################################################################################
+#output to csv
+df = pd.DataFrame.from_dict(init)
+d = df['photos']['photo']
+d_first_page= pd.DataFrame.from_records(d, columns = ['id', 'owner', 'description', 'latitude', 'longitude'])
+
+d_first_page.to_csv('flickr.bird.csv')
+```
+
+#####make map of flickr bird data
+```{r}
+F = read.csv('flickr.bird.csv')
+#find centroid of area of interest
+clat =median(F$latitude)
+clon = median(F$longitude)
+Fmap <- leaflet(F) %>%
+  addTiles() %>%
+      setView(lat = clat, lng=clon, zoom =10) %>%
+
+    #add polygons for dma.ggl 
+  addCircleMarkers(fillOpacity = 0.1)
+mapshot(Fmap, file = "flickr.bird.santamonica.png")
+
+```
+
+
+#import flickrapi, load keys in python, do general search of Santa Monica Hills
+```{python}
+import flickrapi
+import pandas as pd
+#key and secret
+api_key_file = "/Users/fischhoff/ilya documents/R/social_biodiv/flickr_api_key.txt"
+with open(api_key_file, "r") as keyfile:
+    api_key = keyfile.read()
+api_key
+
+#get secret
+api_secret_file = "/Users/fischhoff/ilya documents/R/social_biodiv/flickr_api_secret.txt"
+with open(api_secret_file, "r") as keyfile:
+    secret_api_key = keyfile.read()
+#print(secret_api_key)
+
+flickr = flickrapi.FlickrAPI(api_key, secret_api_key, format='parsed-json')
+extras='url_m,geo,tags,owner_name,date_taken,date_upload,description'
+#bbox
+#34.09166,-119.065606
+#LLX = 35.43
+#LLY = -3.28
+
+LLX = -119.065606
+LLY = 34.09166
+URX=-118.540862
+URY = 34.142754
+#URX = 35.7
+#URY = -3.05
+bb = str(LLX) + ',' + str(LLY) + ',' + str(URX) + ',' + str(URY)
+#query = 'birds'
+#search
+page_no = 1
+parameters = { 'bbox': bb, 
+#'tags': query, 
+'tag_mode':'all', #note: if using tag_mode: all then comment out tags: query
+'per_page':250, 
+'page': page_no, 
+'has_geo':1, 
+'accuracy':15,
+'extras': extras}
+init = flickr.photos.search(**parameters)
+#init = flickr.groups.pools.getPhotos(**parameters)#https://stackoverflow.com/questions/29651576/python-flickr-api-for-group-search-and-get-image-data-set
+pages = init['photos']['pages']
+print(pages)
+total = init['photos']['total']
+print(total)
+
+df = pd.DataFrame.from_dict(init)
+
+d = df['photos']['photo']
+d_first_page= pd.DataFrame.from_records(d, columns = ['id', 'owner', 'description', 'latitude', 'longitude'])
+print(d_first_page)
+
+```
+
