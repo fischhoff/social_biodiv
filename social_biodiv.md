@@ -12,7 +12,7 @@ Ilya
 
     ## '/Library/Frameworks/R.framework/Resources/bin/R' --no-site-file  \
     ##   --no-environ --no-save --no-restore --quiet CMD INSTALL  \
-    ##   '/private/var/folders/0d/qm_pqljx11s_ddc42g1_yscr0000gn/T/RtmpIM7lNm/devtools106492f857999/yihui-knitr-2b3e617'  \
+    ##   '/private/var/folders/0d/qm_pqljx11s_ddc42g1_yscr0000gn/T/Rtmp3NODUt/devtools107906433b6ab/yihui-knitr-2b3e617'  \
     ##   --library='/Library/Frameworks/R.framework/Versions/3.4/Resources/library'  \
     ##   --install-tests
 
@@ -229,3 +229,10 @@ Fmap
 ```
 
 ![](social_biodiv_files/figure-markdown_github/unnamed-chunk-7-1.png)
+
+``` r
+ggplot(data = F, mapping = aes(x = longitude, y = latitude))+
+  geom_point()
+```
+
+![](social_biodiv_files/figure-markdown_github/unnamed-chunk-7-2.png)

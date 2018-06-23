@@ -21,7 +21,7 @@ pkgTest <- function(x)
   library(x, character.only = TRUE)
 }
 #reticulate is needed to use python in R 
-neededPackages <- c("reticulate", "leaflet", "mapview" )#this is just a placeholder, installing dev version of reticulate
+neededPackages <- c("reticulate", "leaflet", "mapview", "ggplot2" )#this is just a placeholder, installing dev version of reticulate
 for (package in neededPackages){pkgTest(package)}
 devtools::install_github("yihui/knitr")
 
@@ -187,5 +187,7 @@ Fmap <- leaflet(F) %>%
 mapshot(Fmap, file = "flickr.bird.santamonica.png")
 
 Fmap
+#ggplot(data = F, mapping = aes(x = longitude, y = latitude))+
+#  geom_point()
 ```
 
