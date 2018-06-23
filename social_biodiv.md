@@ -12,7 +12,7 @@ Ilya
 
     ## '/Library/Frameworks/R.framework/Resources/bin/R' --no-site-file  \
     ##   --no-environ --no-save --no-restore --quiet CMD INSTALL  \
-    ##   '/private/var/folders/0d/qm_pqljx11s_ddc42g1_yscr0000gn/T/RtmprJ8ckz/devtools105535b1c1773/yihui-knitr-2b3e617'  \
+    ##   '/private/var/folders/0d/qm_pqljx11s_ddc42g1_yscr0000gn/T/RtmpIM7lNm/devtools106492f857999/yihui-knitr-2b3e617'  \
     ##   --library='/Library/Frameworks/R.framework/Versions/3.4/Resources/library'  \
     ##   --install-tests
 
@@ -104,7 +104,9 @@ F = read.csv('flickr.bird.csv')
 #find centroid of area of interest
 clat =median(F$latitude)
 clon = median(F$longitude)
-Fmap <- leaflet(F) %>%
+#Fmap <- leaflet(F) %>%
+leaflet(F) %>%
+
   addTiles() %>%
       setView(lat = clat, lng=clon, zoom =10) %>%
 
@@ -114,12 +116,12 @@ Fmap <- leaflet(F) %>%
 
     ## Assuming "longitude" and "latitude" are longitude and latitude, respectively
 
-``` r
-mapshot(Fmap, file = "flickr.bird.santamonica.png")
-Fmap
-```
-
 ![](social_biodiv_files/figure-markdown_github/unnamed-chunk-5-1.png)
+
+``` r
+#mapshot(Fmap, file = "flickr.bird.santamonica.png")
+#Fmap
+```
 
 ##### import flickrapi, load keys in python, do general search of Santa Monica Hills -- not restricted to any tag
 

@@ -104,14 +104,16 @@ F = read.csv('flickr.bird.csv')
 #find centroid of area of interest
 clat =median(F$latitude)
 clon = median(F$longitude)
-Fmap <- leaflet(F) %>%
+#Fmap <- leaflet(F) %>%
+leaflet(F) %>%
+
   addTiles() %>%
       setView(lat = clat, lng=clon, zoom =10) %>%
 
     #add polygons for dma.ggl 
   addCircleMarkers(fillOpacity = 0.1)
-mapshot(Fmap, file = "flickr.bird.santamonica.png")
-Fmap
+#mapshot(Fmap, file = "flickr.bird.santamonica.png")
+#Fmap
 ```
 
 #####import flickrapi, load keys in python, do general search of Santa Monica Hills -- not restricted to any tag
