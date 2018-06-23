@@ -3,7 +3,7 @@ title: "social_biodiv"
 author: "Ilya"
 date: "6/23/2018"
 #using github document, which makes for static maps, because github displays .md but html is too big for github
-output: github_document
+output: html_document
 ---
 
 ```{r setup, include=FALSE}
