@@ -1,48 +1,42 @@
----
-title: "social_biodiv"
-author: "Ilya"
-date: "6/23/2018"
-#using github document, which makes for static maps, because github displays .md but html is too big for github
-output: github_document
----
+social\_biodiv
+================
+Ilya
+6/23/2018
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
+##### install and load reticulate
 
-#####install and load reticulate 
-```{r, echo = FALSE}
-# pkgTest is a helper function to load packages and install packages only when they are not installed yet.
-pkgTest <- function(x)
-{
-  if (x %in% rownames(installed.packages()) == FALSE) {
-    install.packages(x, dependencies= TRUE)    
-  }
-  library(x, character.only = TRUE)
-}
-#reticulate is needed to use python in R 
-neededPackages <- c("reticulate", "leaflet", "mapview" )#this is just a placeholder, installing dev version of reticulate
-for (package in neededPackages){pkgTest(package)}
-devtools::install_github("yihui/knitr")
+    ## Downloading GitHub repo yihui/knitr@master
+    ## from URL https://api.github.com/repos/yihui/knitr/zipball/master
 
-```
+    ## Installing knitr
 
-#####install using py_install
-```{r,echo=FALSE}
-#py_install("nose")
-#py_install("tornado")
-#py_install("matplotlib")
-py_install("flickrapi")
+    ## '/Library/Frameworks/R.framework/Resources/bin/R' --no-site-file  \
+    ##   --no-environ --no-save --no-restore --quiet CMD INSTALL  \
+    ##   '/private/var/folders/0d/qm_pqljx11s_ddc42g1_yscr0000gn/T/RtmprJ8ckz/devtools105535b1c1773/yihui-knitr-2b3e617'  \
+    ##   --library='/Library/Frameworks/R.framework/Versions/3.4/Resources/library'  \
+    ##   --install-tests
 
-```
+    ## 
 
-#####import python packages
-```{r}
+##### install using py\_install
+
+    ## virtualenv: ~/.virtualenvs/r-reticulate 
+    ## Upgrading pip ...
+    ## Upgrading wheel ...
+    ## Upgrading setuptools ...
+    ## Installing packages ...
+    ## 
+    ## Installation complete.
+
+##### import python packages
+
+``` r
 flickrapi <- import("flickrapi")
 ```
 
-#####import flickrapi, load keys in python, do search for birds in Santa Monica Hills
-```{python}
+##### import flickrapi, load keys in python, do search for birds in Santa Monica Hills
+
+``` python
 #####################################################################################
 #import packages
 import flickrapi
@@ -54,9 +48,7 @@ api_key_file = "/Users/fischhoff/ilya documents/R/social_biodiv/flickr_api_key.t
 with open(api_key_file, "r") as keyfile:
     api_key = keyfile.read()
 api_key
-
 #get secret
-
 api_secret_file = "/Users/fischhoff/ilya documents/R/social_biodiv/flickr_api_secret.txt"
 with open(api_secret_file, "r") as keyfile:
     secret_api_key = keyfile.read()
@@ -66,7 +58,6 @@ with open(api_secret_file, "r") as keyfile:
 flickr = flickrapi.FlickrAPI(api_key, secret_api_key, format='parsed-json')
 extras='url_m,geo,tags,owner_name,date_taken,date_upload,description'
 #bbox
-
 LLX = -119.065606
 LLY = 34.09166
 URX=-118.540862
@@ -86,20 +77,29 @@ parameters = { 'bbox': bb,
 init = flickr.photos.search(**parameters)
 pages = init['photos']['pages']
 print(pages)
+```
+
+    ## 1
+
+``` python
 total = init['photos']['total']
 print(total)
-
 #####################################################################################
 #output to csv
+```
+
+    ## 132
+
+``` python
 df = pd.DataFrame.from_dict(init)
 d = df['photos']['photo']
 d_first_page= pd.DataFrame.from_records(d, columns = ['id', 'owner', 'description', 'latitude', 'longitude'])
-
 d_first_page.to_csv('flickr.bird.csv')
 ```
 
-#####make map of flickr data for photos in Santa Monica Mtns w/ "birds" as tag
-```{r}
+##### make map of flickr data for photos in Santa Monica Mtns w/ "birds" as tag
+
+``` r
 F = read.csv('flickr.bird.csv')
 #find centroid of area of interest
 clat =median(F$latitude)
@@ -110,12 +110,20 @@ Fmap <- leaflet(F) %>%
 
     #add polygons for dma.ggl 
   addCircleMarkers(fillOpacity = 0.1)
+```
+
+    ## Assuming "longitude" and "latitude" are longitude and latitude, respectively
+
+``` r
 mapshot(Fmap, file = "flickr.bird.santamonica.png")
 Fmap
 ```
 
-#####import flickrapi, load keys in python, do general search of Santa Monica Hills -- not restricted to any tag
-```{python}
+![](social_biodiv_files/figure-markdown_github/unnamed-chunk-5-1.png)
+
+##### import flickrapi, load keys in python, do general search of Santa Monica Hills -- not restricted to any tag
+
+``` python
 import flickrapi
 import pandas as pd
 #####################################################################################
@@ -124,19 +132,16 @@ api_key_file = "/Users/fischhoff/ilya documents/R/social_biodiv/flickr_api_key.t
 with open(api_key_file, "r") as keyfile:
     api_key = keyfile.read()
 api_key
-
 #get secret
 api_secret_file = "/Users/fischhoff/ilya documents/R/social_biodiv/flickr_api_secret.txt"
 with open(api_secret_file, "r") as keyfile:
     secret_api_key = keyfile.read()
 #print(secret_api_key)
-
 #####################################################################################
 #do search
 flickr = flickrapi.FlickrAPI(api_key, secret_api_key, format='parsed-json')
 extras='url_m,geo,tags,owner_name,date_taken,date_upload,description'
 #bbox
-
 LLX = -119.065606
 LLY = 34.09166
 URX=-118.540862
@@ -154,24 +159,53 @@ init = flickr.photos.search(**parameters)
 #init = flickr.groups.pools.getPhotos(**parameters)#https://stackoverflow.com/questions/29651576/python-flickr-api-for-group-search-and-get-image-data-set
 pages = init['photos']['pages']
 print("pages")
+```
+
+    ## pages
+
+``` python
 print(pages)
+```
+
+    ## 70
+
+``` python
 total = init['photos']['total']
 print("photos")
-print(total)
+```
 
+    ## photos
+
+``` python
+print(total)
 #####################################################################################
 #write to csv
+```
+
+    ## 17471
+
+``` python
 df = pd.DataFrame.from_dict(init)
 d = df['photos']['photo']
 d_first_page= pd.DataFrame.from_records(d, columns = ['id', 'owner', 'description', 'latitude', 'longitude'])
 print("shape of first page")
-print(d_first_page.shape)
+```
 
+    ## shape of first page
+
+``` python
+print(d_first_page.shape)
+```
+
+    ## (250, 5)
+
+``` python
 d_first_page.to_csv('flickr.all.sm.csv')
 ```
 
-#####make map of flickr data for photos in Santa Monica Mtns w/ no restriction on tag
-```{r}
+##### make map of flickr data for photos in Santa Monica Mtns w/ no restriction on tag
+
+``` r
 F = read.csv('flickr.all.sm.csv')
 #find centroid of area of interest
 clat =median(F$latitude)
@@ -182,8 +216,14 @@ Fmap <- leaflet(F) %>%
 
     #add polygons for dma.ggl 
   addCircleMarkers(fillOpacity = 0.1)
+```
+
+    ## Assuming "longitude" and "latitude" are longitude and latitude, respectively
+
+``` r
 mapshot(Fmap, file = "flickr.bird.santamonica.png")
 
 Fmap
 ```
 
+![](social_biodiv_files/figure-markdown_github/unnamed-chunk-7-1.png)
