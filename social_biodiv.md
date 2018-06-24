@@ -3,6 +3,10 @@ social\_biodiv
 Ilya
 6/23/2018
 
+##### To do:
+
+##### 1) try python wrapper for ebird data \#\#\#\#\#(<https://pypi.org/project/ebird-api/>)
+
 ##### install and load reticulate
 
     ## Downloading GitHub repo yihui/knitr@master
@@ -12,7 +16,7 @@ Ilya
 
     ## '/Library/Frameworks/R.framework/Resources/bin/R' --no-site-file  \
     ##   --no-environ --no-save --no-restore --quiet CMD INSTALL  \
-    ##   '/private/var/folders/0d/qm_pqljx11s_ddc42g1_yscr0000gn/T/Rtmp3NODUt/devtools107906433b6ab/yihui-knitr-2b3e617'  \
+    ##   '/private/var/folders/0d/qm_pqljx11s_ddc42g1_yscr0000gn/T/RtmpJ7B7Lc/devtools10a651530a057/yihui-knitr-2b3e617'  \
     ##   --library='/Library/Frameworks/R.framework/Versions/3.4/Resources/library'  \
     ##   --install-tests
 
@@ -184,7 +188,7 @@ print(total)
 #write to csv
 ```
 
-    ## 17471
+    ## 17472
 
 ``` python
 df = pd.DataFrame.from_dict(init)
@@ -231,8 +235,49 @@ Fmap
 ![](social_biodiv_files/figure-markdown_github/unnamed-chunk-7-1.png)
 
 ``` r
-ggplot(data = F, mapping = aes(x = longitude, y = latitude))+
-  geom_point()
+#ggplot(data = F, mapping = aes(x = longitude, y = latitude))+
+#  geom_point()
 ```
 
-![](social_biodiv_files/figure-markdown_github/unnamed-chunk-7-2.png)
+##### get recent ebird data using R package rebird
+
+``` r
+X = -118.75#approx x and y for Santa Monica Mountains
+Y = 34.12
+E = ebirdgeo(species=NULL, lat = Y, lng = X, back = 30, dist= 50)
+head(E)
+```
+
+    ## # A tibble: 6 x 12
+    ##     lng locName howMany sciName obsValid locationPrivate obsDt obsReviewed
+    ##   <dbl> <chr>     <int> <chr>   <lgl>    <lgl>           <chr> <lgl>      
+    ## 1 -118. Silver…       1 Buteo … TRUE     FALSE           2018… FALSE      
+    ## 2 -118. Entrad…       3 Selasp… TRUE     FALSE           2018… FALSE      
+    ## 3 -118. Entrad…       7 Fulica… TRUE     FALSE           2018… FALSE      
+    ## 4 -118. Entrad…       3 Larus … TRUE     FALSE           2018… FALSE      
+    ## 5 -118. Entrad…       3 Sialia… TRUE     FALSE           2018… FALSE      
+    ## 6 -118. Entrad…       5 Egrett… TRUE     FALSE           2018… FALSE      
+    ## # ... with 4 more variables: comName <chr>, lat <dbl>, locID <chr>,
+    ## #   locId <chr>
+
+``` r
+names(E)
+```
+
+    ##  [1] "lng"             "locName"         "howMany"        
+    ##  [4] "sciName"         "obsValid"        "locationPrivate"
+    ##  [7] "obsDt"           "obsReviewed"     "comName"        
+    ## [10] "lat"             "locID"           "locId"
+
+``` r
+# E$latitude = E$lat
+# E$longitude = E$lng
+pal <- colorNumeric("viridis", NULL)
+
+leaflet(E) %>%
+  addTiles() %>%
+      setView(lat = Y, lng=X, zoom =9) %>%
+  addCircleMarkers(lng=E$lng, lat = E$lat, fillOpacity = 0.1, opacity =0.05, fillColor=~pal(E$howMany)                    )
+```
+
+![](social_biodiv_files/figure-markdown_github/unnamed-chunk-8-1.png)
