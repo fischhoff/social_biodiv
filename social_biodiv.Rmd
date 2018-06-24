@@ -193,16 +193,14 @@ Fmap
 #ggplot(data = F, mapping = aes(x = longitude, y = latitude))+
 #  geom_point()
 ```
-
-#####get recent ebird data using R package rebird
+#eBird
+#####get recent ebird data using R package rebird; plot with fill color darkness proportional to #birds seen
 ```{r}
 X = -118.75#approx x and y for Santa Monica Mountains
 Y = 34.12
 E = ebirdgeo(species=NULL, lat = Y, lng = X, back = 30, dist= 50)
 head(E)
 names(E)
-# E$latitude = E$lat
-# E$longitude = E$lng
 pal <- colorNumeric("viridis", NULL)
 
 leaflet(E) %>%
@@ -212,4 +210,35 @@ leaflet(E) %>%
 
 ```
 
+#iNaturalist
+#####get iNat data for Santa Monica Mountains using R package rinat; plot on map with fill color equal to userid
+```{r}
+#vignette:  https://cran.r-project.org/web/packages/rinat/vignettes/rinatVignette.html
+LLX = -119.065606
+LLY = 34.09166
+URX=-118.540862
+URY = 34.142754
+#southern latitude, western longitude, northern latitude, and eastern longitude
+bounds <- c(LLY, LLX, URY, URX)
+I <- get_inat_obs(query = NULL, bounds = bounds, year = 2018, geo=TRUE, maxresults = 10000)
+dim(I)
+
+```
+
+#####plot iNat data on map with fill color equal to iconic name
+```{r}
+I = subset(I, iconic_taxon_name !="")
+Y = mean(LLY, URY)
+X = median(LLX, URX)
+pal <- colorNumeric("viridis", NULL)
+
+leaflet(I) %>%
+  addTiles() %>%
+      setView(lat = Y, lng=X, zoom =10) %>%
+  addCircleMarkers(lng=I$longitude, lat = I$latitude, fillOpacity = 0.15, opacity =0.0, 
+                   radius = 5,
+                   color =~pal(as.numeric(as.factor(I$iconic_taxon_name))),
+                               fillColor=~pal(as.numeric(as.factor(I$iconic_taxon_name)))
+                   )
+```
 
