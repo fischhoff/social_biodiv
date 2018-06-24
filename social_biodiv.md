@@ -16,7 +16,7 @@ Ilya
 
     ## '/Library/Frameworks/R.framework/Resources/bin/R' --no-site-file  \
     ##   --no-environ --no-save --no-restore --quiet CMD INSTALL  \
-    ##   '/private/var/folders/0d/qm_pqljx11s_ddc42g1_yscr0000gn/T/RtmpaPAVKQ/devtools114715d9515a1/yihui-knitr-2b3e617'  \
+    ##   '/private/var/folders/0d/qm_pqljx11s_ddc42g1_yscr0000gn/T/RtmpvNeh2B/devtools115c36817f857/yihui-knitr-2b3e617'  \
     ##   --library='/Library/Frameworks/R.framework/Versions/3.4/Resources/library'  \
     ##   --install-tests
 
@@ -92,7 +92,7 @@ print(total)
 #output to csv
 ```
 
-    ## 132
+    ## 129
 
 ``` python
 df = pd.DataFrame.from_dict(init)
@@ -188,7 +188,7 @@ print(total)
 #write to csv
 ```
 
-    ## 17207
+    ## 17215
 
 ``` python
 df = pd.DataFrame.from_dict(init)
@@ -310,7 +310,7 @@ Y = mean(LLY, URY)
 X = median(LLX, URX)
 pal <- colorNumeric("viridis", NULL)
 
-leaflet(I) %>%
+Imap <- leaflet(I) %>%
   addTiles() %>%
       setView(lat = Y, lng=X, zoom =10) %>%
   addCircleMarkers(lng=I$longitude, lat = I$latitude, fillOpacity = 0.15, opacity =0.0, 
@@ -318,6 +318,7 @@ leaflet(I) %>%
                    color =~pal(as.numeric(as.factor(I$iconic_taxon_name))),
                                fillColor=~pal(as.numeric(as.factor(I$iconic_taxon_name)))
                    )
+Imap
 ```
 
 ![](social_biodiv_files/figure-markdown_github/unnamed-chunk-10-1.png)

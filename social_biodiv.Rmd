@@ -232,7 +232,7 @@ Y = mean(LLY, URY)
 X = median(LLX, URX)
 pal <- colorNumeric("viridis", NULL)
 
-leaflet(I) %>%
+Imap <- leaflet(I) %>%
   addTiles() %>%
       setView(lat = Y, lng=X, zoom =10) %>%
   addCircleMarkers(lng=I$longitude, lat = I$latitude, fillOpacity = 0.15, opacity =0.0, 
@@ -240,5 +240,6 @@ leaflet(I) %>%
                    color =~pal(as.numeric(as.factor(I$iconic_taxon_name))),
                                fillColor=~pal(as.numeric(as.factor(I$iconic_taxon_name)))
                    )
+Imap
 ```
 
