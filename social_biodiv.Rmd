@@ -226,7 +226,7 @@ dim(I)
 ```
 
 #####plot iNat data on map with fill color equal to iconic name
-```{r}
+```{r inat_image}
 I = subset(I, iconic_taxon_name !="")
 Y = mean(LLY, URY)
 X = median(LLX, URX)
@@ -241,5 +241,11 @@ Imap <- leaflet(I) %>%
                                fillColor=~pal(as.numeric(as.factor(I$iconic_taxon_name)))
                    )
 Imap
+```
+
+#####find out how many iNat users are represented in dataset
+```{r}
+length(unique(I$user_id))
+hist(I$user_id)
 ```
 

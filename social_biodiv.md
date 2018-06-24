@@ -16,7 +16,7 @@ Ilya
 
     ## '/Library/Frameworks/R.framework/Resources/bin/R' --no-site-file  \
     ##   --no-environ --no-save --no-restore --quiet CMD INSTALL  \
-    ##   '/private/var/folders/0d/qm_pqljx11s_ddc42g1_yscr0000gn/T/RtmpvNeh2B/devtools115c36817f857/yihui-knitr-2b3e617'  \
+    ##   '/private/var/folders/0d/qm_pqljx11s_ddc42g1_yscr0000gn/T/Rtmprycn0Z/devtools116d16d501ee7/yihui-knitr-2b3e617'  \
     ##   --library='/Library/Frameworks/R.framework/Versions/3.4/Resources/library'  \
     ##   --install-tests
 
@@ -173,7 +173,7 @@ print("pages")
 print(pages)
 ```
 
-    ## 69
+    ## 67
 
 ``` python
 total = init['photos']['total']
@@ -188,7 +188,7 @@ print(total)
 #write to csv
 ```
 
-    ## 17215
+    ## 16750
 
 ``` python
 df = pd.DataFrame.from_dict(init)
@@ -254,12 +254,12 @@ head(E)
     ## # A tibble: 6 x 12
     ##     lng locName howMany sciName obsValid locationPrivate obsDt obsReviewed
     ##   <dbl> <chr>     <int> <chr>   <lgl>    <lgl>           <chr> <lgl>      
-    ## 1 -119. Ventur…       4 Hirund… TRUE     FALSE           2018… FALSE      
-    ## 2 -119. Ventur…      20 Larus … TRUE     FALSE           2018… FALSE      
-    ## 3 -119. Ventur…       1 Cathar… TRUE     FALSE           2018… FALSE      
-    ## 4 -119. Ventur…       1 Egrett… TRUE     FALSE           2018… FALSE      
-    ## 5 -119. Ventur…       2 Passer… TRUE     FALSE           2018… FALSE      
-    ## 6 -119. Ventur…      12 Larus … TRUE     FALSE           2018… FALSE      
+    ## 1 -119. Calleg…       3 Geothl… TRUE     FALSE           2018… FALSE      
+    ## 2 -119. Calleg…       1 Icteri… TRUE     FALSE           2018… FALSE      
+    ## 3 -119. Calleg…      30 Hirund… TRUE     FALSE           2018… FALSE      
+    ## 4 -119. Calleg…       3 Mimus … TRUE     FALSE           2018… FALSE      
+    ## 5 -119. Calleg…       5 Haemor… TRUE     FALSE           2018… FALSE      
+    ## 6 -119. Calleg…       4 Quisca… TRUE     FALSE           2018… FALSE      
     ## # ... with 4 more variables: comName <chr>, lat <dbl>, locID <chr>,
     ## #   locId <chr>
 
@@ -319,6 +319,20 @@ Imap <- leaflet(I) %>%
                                fillColor=~pal(as.numeric(as.factor(I$iconic_taxon_name)))
                    )
 Imap
+```
+
+![](social_biodiv_files/figure-markdown_github/inat_image-1.png)
+
+##### find out how many iNat users are represented in dataset
+
+``` r
+length(unique(I$user_id))
+```
+
+    ## [1] 316
+
+``` r
+hist(I$user_id)
 ```
 
 ![](social_biodiv_files/figure-markdown_github/unnamed-chunk-10-1.png)
